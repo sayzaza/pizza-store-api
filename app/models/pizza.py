@@ -14,7 +14,11 @@ class Pizza(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     description = Column(String)
-    ingredients = relationship("Ingredient", secondary="pizza_ingredients")
+    ingredients = relationship(
+        "Ingredient", 
+        secondary="pizza_ingredients",
+        back_populates="pizzas"
+    )
 
 
 class PizzaIngredient(Base):
@@ -32,7 +36,18 @@ class Ingredient(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     is_allergen = Column(Boolean, default=False)
-    sub_ingredients = relationship("Ingredient", secondary="ingredient_ingredients")
+    pizzas = relationship(
+        "Pizza", 
+        secondary="pizza_ingredients",
+        back_populates="ingredients"
+    )
+    sub_ingredients = relationship(
+        "Ingredient", 
+        secondary="ingredient_ingredients",
+        foreign_keys="[IngredientIngredient.parent_ingredient_id, IngredientIngredient.child_ingredient_id]",
+        primaryjoin="Ingredient.id == IngredientIngredient.parent_ingredient_id",
+        secondaryjoin="Ingredient.id == IngredientIngredient.child_ingredient_id"
+    )
 
 
 class IngredientIngredient(Base):

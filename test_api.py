@@ -5,8 +5,13 @@ Demonstrates all API functionality with example requests
 
 import requests
 import json
+import os
 
-BASE_URL = "http://localhost:8000"
+# Set environment to avoid proxy issues
+os.environ['NO_PROXY'] = 'localhost,127.0.0.1'
+
+BASE_URL = "http://127.0.0.1:8000"
+PROXIES = {'http': None, 'https': None}
 
 def test_api():
     """Test all API endpoints with example requests"""
@@ -16,7 +21,7 @@ def test_api():
     
     # Test 1: Get all pizzas
     print("\n1. Getting all pizzas...")
-    response = requests.get(f"{BASE_URL}/pizzas")
+    response = requests.get(f"{BASE_URL}/pizzas", proxies=PROXIES)
     if response.status_code == 200:
         data = response.json()
         print(f"Found {data['total']} pizzas")
@@ -26,7 +31,7 @@ def test_api():
     
     # Test 2: Search functionality
     print("\n2. Searching for 'margherita'...")
-    response = requests.get(f"{BASE_URL}/pizzas?search=margherita")
+    response = requests.get(f"{BASE_URL}/pizzas?search=margherita", proxies=PROXIES)
     if response.status_code == 200:
         data = response.json()
         print(f"Found {data['total']} margherita pizzas")
@@ -37,7 +42,7 @@ def test_api():
     
     # Test 3: Filter by ingredient
     print("\n3. Filtering by ingredient 'cheese'...")
-    response = requests.get(f"{BASE_URL}/pizzas?ingredient_filter=cheese")
+    response = requests.get(f"{BASE_URL}/pizzas?ingredient_filter=cheese", proxies=PROXIES)
     if response.status_code == 200:
         data = response.json()
         print(f"Found {data['total']} pizzas with cheese")
@@ -48,7 +53,7 @@ def test_api():
     
     # Test 4: Filter by allergen
     print("\n4. Filtering by allergen 'dairy'...")
-    response = requests.get(f"{BASE_URL}/pizzas?allergen_filter=dairy")
+    response = requests.get(f"{BASE_URL}/pizzas?allergen_filter=dairy", proxies=PROXIES)
     if response.status_code == 200:
         data = response.json()
         print(f"Found {data['total']} pizzas with dairy allergens")
@@ -59,7 +64,7 @@ def test_api():
     
     # Test 5: Get specific pizza
     print("\n5. Getting specific pizza (ID: 1)...")
-    response = requests.get(f"{BASE_URL}/pizzas/1")
+    response = requests.get(f"{BASE_URL}/pizzas/1", proxies=PROXIES)
     if response.status_code == 200:
         pizza = response.json()
         print(f"Pizza: {pizza['name']}")
@@ -71,7 +76,7 @@ def test_api():
     
     # Test 6: Get all ingredients
     print("\n6. Getting all ingredients...")
-    response = requests.get(f"{BASE_URL}/ingredients")
+    response = requests.get(f"{BASE_URL}/ingredients", proxies=PROXIES)
     if response.status_code == 200:
         ingredients = response.json()
         print(f"Found {len(ingredients)} ingredients")
@@ -83,7 +88,7 @@ def test_api():
     
     # Test 7: Combined filters
     print("\n7. Combined search and filter...")
-    response = requests.get(f"{BASE_URL}/pizzas?search=chicken&ingredient_filter=cheese")
+    response = requests.get(f"{BASE_URL}/pizzas?search=chicken&ingredient_filter=cheese", proxies=PROXIES)
     if response.status_code == 200:
         data = response.json()
         print(f"Found {data['total']} chicken pizzas with cheese")
